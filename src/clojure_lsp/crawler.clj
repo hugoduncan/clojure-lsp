@@ -191,7 +191,9 @@
 (defn initialize-project [project-root-uri client-capabilities client-settings force-settings report-callback db]
   (report-callback 0 "clojure-lsp" db)
   (let [project-settings (config/resolve-for-root project-root-uri)
+        _                 (report-callback 1 "clojure-lsp" db)
         root-path (shared/uri->path project-root-uri)
+        _                 (report-callback 2 "clojure-lsp" db)
         env (:env @db)
         encoding-settings {:uri-format {:upper-case-drive-letter? (->> project-root-uri URI. .getPath
                                                                        (re-find #"^/[A-Z]:/")
@@ -203,7 +205,9 @@
                                         force-settings)
         _ (when-let [log-path (:log-path raw-settings)]
             (logging/update-log-path log-path db))
+        _                 (report-callback 3 "clojure-lsp" db)
         settings (settings/udpate-with-default-settings nil raw-settings project-root-uri env)]
+    (report-callback 4 "clojure-lsp" db)
     (swap! db assoc
            :project-root-uri project-root-uri
            :client-settings client-settings
